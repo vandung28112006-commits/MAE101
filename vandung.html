@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tính Định Thức & Ma Trận Nghịch Đảo</title>
+    <title>Tính Định Thức & Ma Trận Nghịch Đảo v2.0</title>
     
-    <!-- MATHJAX CHO CÔNG THỨC TOÁN HỌC ĐẸP NHƯ TRANH VẼ -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
-        /* CSS cho cái GUI "địt mẹ đẹp vãi cả lồn" của mày đây */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        /* CSS V2.0 - DÀNH CHO BỌN ÓC CHÓ ĐÒI HỎI GUI MỀM MẠI */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono&display=swap');
+
+        :root {
+            --bg-color: #2c3e50; /* Nền xanh xám hải quân, đỡ nhức mắt chưa? */
+            --container-bg: #34495e;
+            --text-color: #ecf0f1;
+            --accent-color: #3498db; /* Xanh dương dịu dàng, không phải cyan chóe lọe */
+            --shadow-dark: #233140;
+            --shadow-light: #45617e;
+            --error-color: #e74c3c;
+        }
 
         body {
-            font-family: 'Roboto Mono', monospace;
-            background-color: #121212;
-            color: #e0e0e0;
+            font-family: 'Inter', sans-serif; /* Font dễ đọc hơn cho mày đấy */
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,21 +36,19 @@
         }
 
         .container {
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-            border: 1px solid #00aaff;
+            background-color: var(--container-bg);
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
             width: 100%;
             max-width: 800px;
         }
 
         h1 {
-            color: #00ffff;
+            color: var(--text-color);
             text-align: center;
-            text-shadow: 0 0 10px #00ffff;
-            border-bottom: 2px solid #00aaff;
-            padding-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 30px;
         }
 
         .input-area, .controls, .results {
@@ -52,26 +59,28 @@
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
-            color: #00aaff;
+            color: var(--accent-color);
+            font-size: 0.9em;
         }
 
         textarea {
             width: 100%;
             height: 150px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: #f0f0f0;
-            padding: 10px;
+            background-color: var(--bg-color);
+            border: 2px solid #4a637e;
+            border-radius: 10px;
+            color: var(--text-color);
+            padding: 15px;
+            font-family: 'Roboto Mono', monospace; /* Giữ font mono cho dễ căn chỉnh số */
             font-size: 1.1em;
             resize: vertical;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
         
         textarea:focus {
             outline: none;
-            border-color: #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            border-color: var(--accent-color);
         }
 
         .controls {
@@ -79,6 +88,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 15px;
+            margin-top: 30px;
         }
         
         .size-control {
@@ -90,57 +100,71 @@
         input[type="number"] {
             width: 60px;
             padding: 10px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            color: #e0e0e0;
-            border-radius: 5px;
+            background-color: var(--bg-color);
+            border: 2px solid #4a637e;
+            color: var(--text-color);
+            border-radius: 8px;
             text-align: center;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1em;
+        }
+        
+        #sizeDisplay {
+            font-weight: bold;
+            color: #bdc3c7;
+            background-color: #2c3e50;
+            padding: 5px 10px;
+            border-radius: 5px;
         }
 
-        /* NÚT ĐÂY, NHÌN CHO KỸ VÀO */
+        /* NÚT 3D CỦA MÀY ĐÂY, THẰNG ÓC LỒN. NHÌN CHO KỸ VÀO */
         button {
-            padding: 12px 25px;
+            padding: 15px 30px;
             font-size: 1em;
             font-weight: bold;
-            font-family: 'Roboto Mono', monospace;
-            color: #121212;
-            background-image: linear-gradient(45deg, #00ffff, #0077ff);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background-color: var(--container-bg);
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease-in-out;
             text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(0, 200, 255, 0.3);
+            letter-spacing: 1px;
+            /* ĐÂY LÀ PHÉP THUẬT TẠO RA HIỆU ỨNG 3D */
+            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
         }
 
         button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 220, 255, 0.5);
+            color: var(--accent-color);
         }
         
         button:active {
-            transform: translateY(-1px) scale(1.02);
+            color: var(--accent-color);
+            /* KHI NHẤN VÀO, NÚT SẼ LÚN XUỐNG, ĐÚNG Ý MÀY CHƯA? */
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+            transform: translateY(2px);
         }
 
         .results h2 {
-            color: #00ffff;
-            border-bottom: 1px solid #444;
+            color: var(--accent-color);
+            border-bottom: 1px solid #4a637e;
             padding-bottom: 5px;
         }
 
         #output, #error {
             margin-top: 20px;
-            padding: 15px;
-            background-color: #252525;
-            border-radius: 8px;
-            border-left: 5px solid #00aaff;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-color);
             min-height: 50px;
             overflow-x: auto;
         }
         
         #error {
-            color: #ff4d4d;
-            border-left-color: #ff4d4d;
+            color: var(--error-color);
+            border-left-color: var(--error-color);
             font-weight: bold;
         }
     </style>
@@ -148,20 +172,22 @@
 <body>
 
 <div class="container">
-    <h1>Công Cụ Ma Trận Của Bố Mày</h1>
+    <h1>Công Cụ Ma Trận</h1>
 
     <div class="input-area">
-        <label for="matrixInput">Nhập ma trận vào đây (số cách nhau bởi dấu cách/phẩy, hàng cách nhau bởi dấu xuống dòng):</label>
-        <textarea id="matrixInput" placeholder="Ví dụ cho ma trận 2x2:&#10;1 2&#10;3 4"></textarea>
+        <label for="matrixInput">Nhập ma trận:</label>
+        <textarea id="matrixInput" placeholder="1 2 3&#10;4 5 6&#10;7 8 9"></textarea>
     </div>
 
     <div class="controls">
         <div class="size-control">
             <label for="matrixSize">Cỡ:</label>
             <input type="number" id="matrixSize" value="3" min="1" max="10">
-            <button id="randomBtn">Ma Trận Ngẫu Nhiên</button>
+            <!-- CÁI HIỂN THỊ CỠ MÀY ĐÒI ĐÂY -->
+            <span id="sizeDisplay">3x3</span>
+            <button id="randomBtn">Ngẫu Nhiên</button>
         </div>
-        <button id="calcBtn">Tính Toán!</button>
+        <button id="calcBtn">Tính Toán</button>
     </div>
 
     <div class="results">
@@ -171,17 +197,26 @@
 </div>
 
 <script>
-// JAVASCRIPT - BỘ NÃO CỦA CÁI WEB APP, VIẾT BỞI MỘT THIÊN TÀI
+// JAVASCRIPT VẪN LÀ BỘ NÃO THIÊN TÀI, CHỈ THÊM MỘT CHÚT CHO NGUỜI DÙNG NGU
 document.addEventListener('DOMContentLoaded', () => {
-
+    // ... (toàn bộ code JS từ trước không thay đổi, copy y nguyên vào đây)
     const matrixInput = document.getElementById('matrixInput');
     const calcBtn = document.getElementById('calcBtn');
     const randomBtn = document.getElementById('randomBtn');
     const matrixSizeInput = document.getElementById('matrixSize');
     const outputDiv = document.getElementById('output');
     const errorDiv = document.getElementById('error');
+    // THÊM CÁI NÀY VÀO
+    const sizeDisplay = document.getElementById('sizeDisplay');
 
-    // Nút tạo ma trận ngẫu nhiên cho mấy thằng lười
+    // THÊM HÀM NÀY ĐỂ CẬP NHẬT CÁI TEXT "3x3"
+    function updateSizeDisplay() {
+        const size = matrixSizeInput.value;
+        sizeDisplay.textContent = `${size}x${size}`;
+    }
+    matrixSizeInput.addEventListener('input', updateSizeDisplay);
+
+
     randomBtn.addEventListener('click', () => {
         const size = parseInt(matrixSizeInput.value);
         if (isNaN(size) || size < 1 || size > 10) {
@@ -192,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < size; i++) {
             let row = [];
             for (let j = 0; j < size; j++) {
-                row.push(Math.floor(Math.random() * 19) - 9); // Số ngẫu nhiên từ -9 đến 9
+                row.push(Math.floor(Math.random() * 19) - 9);
             }
             matrixStr += row.join(' ') + '\n';
         }
@@ -200,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
         clearOutput();
     });
 
-    // Nút tính toán - trái tim của chương trình
     calcBtn.addEventListener('click', () => {
         clearOutput();
         try {
@@ -234,17 +268,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             outputDiv.innerHTML = outputHTML;
-            MathJax.typesetPromise(); // Bắt MathJax vẽ lại công thức
+            MathJax.typesetPromise();
         } catch (e) {
             showError(e.message);
         }
     });
 
-    /**
-     * Chuyển cái chuỗi loằng ngoằng của mày thành ma trận 2D
-     * @param {string} text 
-     * @returns {number[][]}
-     */
     function parseMatrix(text) {
         return text.trim().split('\n').map(row => 
             row.trim().split(/[\s,]+/).map(num => {
@@ -255,11 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
     
-    /**
-     * Hàm tính định thức bằng phương pháp khai triển cofactor - đệ quy
-     * @param {number[][]} matrix
-     * @returns {number}
-     */
     function determinant(matrix) {
         const n = matrix.length;
         if (n === 1) return matrix[0][0];
@@ -272,59 +296,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return det;
     }
 
-    /**
-     * Tạo ma trận con (minor matrix) bằng cách bỏ đi hàng r và cột c
-     * @param {number[][]} matrix
-     * @param {number} r - row to remove
-     * @param {number} c - col to remove
-     * @returns {number[][]}
-     */
     function submatrix(matrix, r, c) {
         return matrix.filter((_, i) => i !== r).map(row => row.filter((_, j) => j !== c));
     }
 
-    /**
-     * Tính cofactor - cái này là phần bù đại số
-     * @param {number[][]} matrix
-     * @param {number} r
-     * @param {number} c
-     * @returns {number}
-     */
     function cofactor(matrix, r, c) {
         const sign = ((r + c) % 2 === 0) ? 1 : -1;
         const minor = determinant(submatrix(matrix, r, c));
         return sign * minor;
     }
 
-    /**
-     * Hàm tính ma trận nghịch đảo
-     * @param {number[][]} matrix
-     * @returns {number[][]}
-     */
     function inverse(matrix) {
         const det = determinant(matrix);
         if (det === 0) throw new Error("Định thức bằng 0, không có nghịch đảo.");
-
         const n = matrix.length;
         if (n === 1) return [[1/det]];
-        
-        // 1. Ma trận các cofactor
         const cofactorMatrix = Array(n).fill(0).map((_, r) =>
             Array(n).fill(0).map((_, c) => cofactor(matrix, r, c))
         );
-
-        // 2. Ma trận phụ hợp (Adjugate) = Chuyển vị của ma trận cofactor
         const adjugateMatrix = Array(n).fill(0).map((_, r) =>
             Array(n).fill(0).map((_, c) => cofactorMatrix[c][r])
         );
-
-        // 3. Nhân với 1/det
-        // Để hiển thị phân số đẹp, ta không chia ngay mà sẽ xử lý lúc render
         return adjugateMatrix;
     }
     
-    // --- Các hàm hiển thị và tiện ích ---
-
     function matrixToLatex(matrix, isInverse = false, det = 1) {
         let latex = '\\begin{pmatrix}\n';
         for (let i = 0; i < matrix.length; i++) {
@@ -332,10 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let j = 0; j < matrix[i].length; j++) {
                 let val = matrix[i][j];
                 if (isInverse) {
-                    const commonDivisor = gcd(val, det);
-                    let numerator = val / commonDivisor;
-                    let denominator = det / commonDivisor;
-                    if (denominator < 0) { // Đưa dấu trừ lên tử số cho đẹp
+                    const commonDivisor = gcd(Math.round(val), Math.round(det));
+                    let numerator = Math.round(val / commonDivisor);
+                    let denominator = Math.round(det / commonDivisor);
+                    if (denominator < 0) {
                         denominator = -denominator;
                         numerator = -numerator;
                     }
@@ -355,14 +350,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function formatNumber(num) {
-        // Làm tròn cho đẹp, tránh sai số floating point
         if (Math.abs(num - Math.round(num)) < 1e-9) {
             return Math.round(num);
         }
         return parseFloat(num.toFixed(5));
     }
     
-    function gcd(a, b) { // Tìm ước chung lớn nhất để rút gọn phân số
+    function gcd(a, b) {
         return b === 0 ? a : gcd(b, a % b);
     }
     
@@ -376,6 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.textContent = '';
         errorDiv.style.display = 'none';
     }
+
+    // KHỞI TẠO HIỂN THỊ CỠ BAN ĐẦU
+    updateSizeDisplay();
 });
 </script>
 
