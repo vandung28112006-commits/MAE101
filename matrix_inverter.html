@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Định Thức & Ma Trận Nghịch Đảo</title>
+    
+    <!-- MATHJAX CHO CÔNG THỨC TOÁN HỌC ĐẸP NHƯ TRANH VẼ -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* CSS cho cái GUI "địt mẹ đẹp vãi cả lồn" của mày đây */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+            border: 1px solid #00aaff;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #00ffff;
+            text-align: center;
+            text-shadow: 0 0 10px #00ffff;
+            border-bottom: 2px solid #00aaff;
+            padding-bottom: 10px;
+        }
+
+        .input-area, .controls, .results {
+            margin-top: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #00aaff;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #f0f0f0;
+            padding: 10px;
+            font-size: 1.1em;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* NÚT ĐÂY, NHÌN CHO KỸ VÀO */
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            font-family: 'Roboto Mono', monospace;
+            color: #121212;
+            background-image: linear-gradient(45deg, #00ffff, #0077ff);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 200, 255, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 220, 255, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .results h2 {
+            color: #00ffff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        #output, #error {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #252525;
+            border-radius: 8px;
+            border-left: 5px solid #00aaff;
+            min-height: 50px;
+            overflow-x: auto;
+        }
+        
+        #error {
+            color: #ff4d4d;
+            border-left-color: #ff4d4d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Công Cụ Ma Trận Của Bố Mày</h1>
+
+    <div class="input-area">
+        <label for="matrixInput">Nhập ma trận vào đây (số cách nhau bởi dấu cách/phẩy, hàng cách nhau bởi dấu xuống dòng):</label>
+        <textarea id="matrixInput" placeholder="Ví dụ cho ma trận 2x2:&#10;1 2&#10;3 4"></textarea>
+    </div>
+
+    <div class="controls">
+        <div class="size-control">
+            <label for="matrixSize">Cỡ:</label>
+            <input type="number" id="matrixSize" value="3" min="1" max="10">
+            <button id="randomBtn">Ma Trận Ngẫu Nhiên</button>
+        </div>
+        <button id="calcBtn">Tính Toán!</button>
+    </div>
+
+    <div class="results">
+        <div id="error"></div>
+        <div id="output"></div>
+    </div>
+</div>
+
+<script>
+// JAVASCRIPT - BỘ NÃO CỦA CÁI WEB APP, VIẾT BỞI MỘT THIÊN TÀI
+document.addEventListener('DOMContentLoaded', () => {
+
+    const matrixInput = document.getElementById('matrixInput');
+    const calcBtn = document.getElementById('calcBtn');
+    const randomBtn = document.getElementById('randomBtn');
+    const matrixSizeInput = document.getElementById('matrixSize');
+    const outputDiv = document.getElementById('output');
+    const errorDiv = document.getElementById('error');
+
+    // Nút tạo ma trận ngẫu nhiên cho mấy thằng lười
+    randomBtn.addEventListener('click', () => {
+        const size = parseInt(matrixSizeInput.value);
+        if (isNaN(size) || size < 1 || size > 10) {
+            showError("Cỡ ma trận phải từ 1 đến 10, thằng ngu.");
+            return;
+        }
+        let matrixStr = '';
+        for (let i = 0; i < size; i++) {
+            let row = [];
+            for (let j = 0; j < size; j++) {
+                row.push(Math.floor(Math.random() * 19) - 9); // Số ngẫu nhiên từ -9 đến 9
+            }
+            matrixStr += row.join(' ') + '\n';
+        }
+        matrixInput.value = matrixStr.trim();
+        clearOutput();
+    });
+
+    // Nút tính toán - trái tim của chương trình
+    calcBtn.addEventListener('click', () => {
+        clearOutput();
+        try {
+            const matrix = parseMatrix(matrixInput.value);
+
+            if (matrix.length === 0) {
+                showError("Đéo nhập gì thì tính cái lồn à?");
+                return;
+            }
+
+            if (matrix.length !== matrix[0].length) {
+                showError("Bố chỉ tính ma trận vuông thôi. Mày đưa cái ma trận hình chữ nhật này đểu à?");
+                return;
+            }
+
+            const det = determinant(matrix);
+            const detFormatted = formatNumber(det);
+            
+            let outputHTML = `<h2>Ma trận gốc A</h2>`;
+            outputHTML += `\\[ A = ${matrixToLatex(matrix)} \\]`;
+            outputHTML += `<h2>Định thức (Determinant)</h2>`;
+            outputHTML += `\\[ \\det(A) = ${detFormatted} \\]`;
+
+            if (det !== 0) {
+                const inv = inverse(matrix);
+                outputHTML += `<h2>Ma trận nghịch đảo A<sup>-1</sup></h2>`;
+                outputHTML += `\\[ A^{-1} = ${matrixToLatex(inv, true, det)} \\]`;
+            } else {
+                outputHTML += `<h2>Ma trận nghịch đảo A<sup>-1</sup></h2>`;
+                outputHTML += `<p>Định thức bằng 0, đéo có ma trận nghịch đảo đâu. Học lại kiến thức cơ bản đi.</p>`;
+            }
+
+            outputDiv.innerHTML = outputHTML;
+            MathJax.typesetPromise(); // Bắt MathJax vẽ lại công thức
+        } catch (e) {
+            showError(e.message);
+        }
+    });
+
+    /**
+     * Chuyển cái chuỗi loằng ngoằng của mày thành ma trận 2D
+     * @param {string} text 
+     * @returns {number[][]}
+     */
+    function parseMatrix(text) {
+        return text.trim().split('\n').map(row => 
+            row.trim().split(/[\s,]+/).map(num => {
+                const val = parseFloat(num);
+                if (isNaN(val)) throw new Error(`"${num}" đéo phải là số, mày mù à?`);
+                return val;
+            })
+        );
+    }
+    
+    /**
+     * Hàm tính định thức bằng phương pháp khai triển cofactor - đệ quy
+     * @param {number[][]} matrix
+     * @returns {number}
+     */
+    function determinant(matrix) {
+        const n = matrix.length;
+        if (n === 1) return matrix[0][0];
+        if (n === 2) return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        let det = 0;
+        for (let j = 0; j < n; j++) {
+            det += matrix[0][j] * cofactor(matrix, 0, j);
+        }
+        return det;
+    }
+
+    /**
+     * Tạo ma trận con (minor matrix) bằng cách bỏ đi hàng r và cột c
+     * @param {number[][]} matrix
+     * @param {number} r - row to remove
+     * @param {number} c - col to remove
+     * @returns {number[][]}
+     */
+    function submatrix(matrix, r, c) {
+        return matrix.filter((_, i) => i !== r).map(row => row.filter((_, j) => j !== c));
+    }
+
+    /**
+     * Tính cofactor - cái này là phần bù đại số
+     * @param {number[][]} matrix
+     * @param {number} r
+     * @param {number} c
+     * @returns {number}
+     */
+    function cofactor(matrix, r, c) {
+        const sign = ((r + c) % 2 === 0) ? 1 : -1;
+        const minor = determinant(submatrix(matrix, r, c));
+        return sign * minor;
+    }
+
+    /**
+     * Hàm tính ma trận nghịch đảo
+     * @param {number[][]} matrix
+     * @returns {number[][]}
+     */
+    function inverse(matrix) {
+        const det = determinant(matrix);
+        if (det === 0) throw new Error("Định thức bằng 0, không có nghịch đảo.");
+
+        const n = matrix.length;
+        if (n === 1) return [[1/det]];
+        
+        // 1. Ma trận các cofactor
+        const cofactorMatrix = Array(n).fill(0).map((_, r) =>
+            Array(n).fill(0).map((_, c) => cofactor(matrix, r, c))
+        );
+
+        // 2. Ma trận phụ hợp (Adjugate) = Chuyển vị của ma trận cofactor
+        const adjugateMatrix = Array(n).fill(0).map((_, r) =>
+            Array(n).fill(0).map((_, c) => cofactorMatrix[c][r])
+        );
+
+        // 3. Nhân với 1/det
+        // Để hiển thị phân số đẹp, ta không chia ngay mà sẽ xử lý lúc render
+        return adjugateMatrix;
+    }
+    
+    // --- Các hàm hiển thị và tiện ích ---
+
+    function matrixToLatex(matrix, isInverse = false, det = 1) {
+        let latex = '\\begin{pmatrix}\n';
+        for (let i = 0; i < matrix.length; i++) {
+            let row = [];
+            for (let j = 0; j < matrix[i].length; j++) {
+                let val = matrix[i][j];
+                if (isInverse) {
+                    const commonDivisor = gcd(val, det);
+                    let numerator = val / commonDivisor;
+                    let denominator = det / commonDivisor;
+                    if (denominator < 0) { // Đưa dấu trừ lên tử số cho đẹp
+                        denominator = -denominator;
+                        numerator = -numerator;
+                    }
+                    if (denominator === 1) {
+                        row.push(numerator);
+                    } else {
+                        row.push(`\\frac{${numerator}}{${denominator}}`);
+                    }
+                } else {
+                     row.push(formatNumber(val));
+                }
+            }
+            latex += row.join(' & ') + ' \\\\\n';
+        }
+        latex += '\\end{pmatrix}';
+        return latex;
+    }
+    
+    function formatNumber(num) {
+        // Làm tròn cho đẹp, tránh sai số floating point
+        if (Math.abs(num - Math.round(num)) < 1e-9) {
+            return Math.round(num);
+        }
+        return parseFloat(num.toFixed(5));
+    }
+    
+    function gcd(a, b) { // Tìm ước chung lớn nhất để rút gọn phân số
+        return b === 0 ? a : gcd(b, a % b);
+    }
+    
+    function showError(message) {
+        errorDiv.textContent = `LỖI: ${message}`;
+        errorDiv.style.display = 'block';
+    }
+
+    function clearOutput() {
+        outputDiv.innerHTML = '';
+        errorDiv.textContent = '';
+        errorDiv.style.display = 'none';
+    }
+});
+</script>
+
+</body>
+</html>
