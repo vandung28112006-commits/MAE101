@@ -3,24 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đấu Trường Định Thức v2.0</title>
+    <title>Đấu Trường Định Thức - 15 Tầng Địa Ngục</title>
     
     <script>
-        // CẤU HÌNH CHO MATHJAX ĐỂ KHÔNG XUNG ĐỘT
+        // CẤU HÌNH CHO MATHJAX ĐỂ TRÁNH XUNG ĐỘT - CÔNG NGHỆ CHỐNG NGU
         window.MathJax = {
           tex: {
             inlineMath: [['$', '$'], ['\\(', '\\)']]
           },
-          svg: {
-            fontCache: 'global'
-          },
           startup: {
             pageReady: () => {
-              // HÀM NÀY SẼ CHẠY KHI MATHJAX ĐÃ SẴN SÀNG
-              // ĐÂY LÀ CHÌA KHÓA ĐỂ TRÁNH LỖI CỦA MÀY
               return MathJax.startup.defaultPageReady().then(() => {
-                console.log('MathJax is ready!');
-                startQuiz(); // BẮT ĐẦU QUIZ SAU KHI MATHJAX ĐÃ CHẠY XONG
+                console.log('MathJax đã sẵn sàng. Bắt đầu tra tấn!');
+                startQuiz(); // CHỈ BẮT ĐẦU KHI MATHJAX ĐÃ CHẠY XONG
               });
             }
           }
@@ -32,18 +27,16 @@
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
 
         :root {
-            --bg-color: #1a1a1a; /* Đen hơn cho nó ngầu */
+            --bg-color: #1a1a1a;
             --container-bg: #2b2b2b;
             --text-color: #e0e0e0;
-            --accent-color: #00ff9d; /* Xanh neon cho nó ra dáng code */
+            --accent-color: #00ff9d;
             --correct-color: #2ecc71;
             --incorrect-color: #e74c3c;
-            --shadow-dark: #111;
-            --shadow-light: #444;
         }
 
         body {
-            font-family: 'Roboto Mono', monospace; /* FONT CODE CHO MÀY ĐÂY */
+            font-family: 'Roboto Mono', monospace;
             background-color: var(--bg-color);
             color: var(--text-color);
             display: flex;
@@ -60,9 +53,9 @@
             padding: 30px 40px;
             border-radius: 15px;
             border: 1px solid var(--accent-color);
-            box-shadow: 0 0 20px rgba(0, 255, 157, 0.1);
+            box-shadow: 0 0 25px rgba(0, 255, 157, 0.15);
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
             text-align: center;
         }
 
@@ -78,8 +71,8 @@
         #question-container {
             min-height: 100px;
             margin-bottom: 30px;
-            font-size: 1.3em;
-            line-height: 1.6;
+            font-size: 1.25em;
+            line-height: 1.7;
         }
 
         #options-container {
@@ -89,8 +82,8 @@
         }
 
         .option-btn {
-            padding: 20px;
-            font-size: 1.1em;
+            padding: 18px;
+            font-size: 1.05em;
             font-family: 'Roboto Mono', monospace;
             font-weight: bold;
             color: var(--text-color);
@@ -112,17 +105,8 @@
             opacity: 0.6;
         }
         
-        .option-btn.correct {
-            background-color: var(--correct-color);
-            border-color: #fff;
-            color: #1a1a1a;
-        }
-        
-        .option-btn.incorrect {
-            background-color: var(--incorrect-color);
-            border-color: #fff;
-            color: #1a1a1a;
-        }
+        .option-btn.correct { background-color: var(--correct-color); border-color: #fff; color: #1a1a1a; }
+        .option-btn.incorrect { background-color: var(--incorrect-color); border-color: #fff; color: #1a1a1a; }
 
         #feedback-container {
             margin-top: 25px;
@@ -146,7 +130,7 @@
 <body>
 
 <div class="quiz-container">
-    <h1>Đấu Trường Định Thức</h1>
+    <h1>15 Tầng Địa Ngục Định Thức</h1>
     <div id="header">
         <span id="question-counter"></span>
         <span id="score"></span>
@@ -155,23 +139,30 @@
     <div id="question-container"></div>
     <div id="options-container"></div>
     <div id="feedback-container"></div>
-    <button id="next-btn" class="option-btn">Câu tiếp theo, thằng ngu!</button>
+    <button id="next-btn" class="option-btn">Xuống tầng tiếp theo!</button>
 </div>
 
 <script>
-// BỘ NÃO V2.0 - BẤT BẠI
+// BỘ NÃO SIÊU VIỆT VỚI 15 CÂU HỎI
 const questions = [
-    { question: `Cho ma trận $A$ có $\\det(A) = 5$. Nếu ma trận $B$ được tạo ra bằng cách đổi chỗ 2 dòng bất kỳ của $A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["5", "-5", "25", "1/5"], answer: 1, explanation: "Tính chất 1: Đổi chỗ 2 dòng, định thức đổi dấu. Ngu thế." },
-    { question: `Cho ma trận $A$ cấp 3x3 có $\\det(A) = 2$. Nếu ta nhân tất cả các phần tử của $A$ với số 5 để được ma trận $B=5A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["10", "50", "250", "2"], answer: 2, explanation: "Tính chất 8: $\\det(kA) = k^n \\det(A)$. Ở đây $n=3$, $k=5$. Vậy $\\det(5A) = 5^3 \\times 2 = 125 \\times 2 = 250$. Mày chắc chắn đã chọn 10 đúng không, thằng óc chó?" },
-    { question: `Một ma trận tam giác $A$ có các phần tử trên đường chéo chính là $1, -2, 5$. Định thức của $A$ là bao nhiêu?`, options: ["-10", "8", "0", "Không xác định được"], answer: 0, explanation: "Tính chất 9: Định thức của ma trận tam giác bằng TÍCH các phần tử trên đường chéo. $1 \\times (-2) \\times 5 = -10$. Cái này mà cũng sai thì cút mẹ đi." },
-    { question: `Nếu một ma trận vuông $A$ có $\\det(A) = 0$, điều gì chắc chắn đúng về ma trận nghịch đảo $A^{-1}$?`, options: ["$A^{-1}$ tồn tại", "$A^{-1}$ không tồn tại", "$A^{-1}$ là ma trận không", "$\\det(A^{-1}) = 0$"], answer: 1, explanation: "Tính chất 10: Ma trận khả nghịch KHI VÀ CHỈ KHI định thức khác 0. $\\det(A)=0$ nghĩa là ma trận suy biến, làm đéo gì có nghịch đảo." },
-    { question: `Mày lấy dòng 1 của ma trận $A$ cộng với $100$ lần dòng 3 của $A$. Định thức của ma trận mới thay đổi thế nào?`, options: ["Tăng 100 lần", "Giảm 100 lần", "Không thay đổi", "Bằng 0"], answer: 2, explanation: "Tính chất 3: Cộng một dòng với tổ hợp tuyến tính của các dòng KHÁC thì định thức KHÔNG ĐỔI. Đơn giản vậy thôi." },
-    { question: `Cho $\\det(A) = 4$ và $\\det(B) = -2$. Vậy $\\det(A \\cdot B)$ bằng bao nhiêu?`, options: ["2", "-8", "-2", "6"], answer: 1, explanation: "Tính chất 6: $\\det(AB) = \\det(A) \\times \\det(B)$. Lấy $4 \\times (-2) = -8$. Dễ như ăn kẹo." },
-    { question: `Một ma trận $A$ có dòng 2 bằng đúng 3 lần dòng 1. Định thức của $A$ là bao nhiêu?`, options: ["3", "1/3", "0", "Không xác định được"], answer: 2, explanation: "Tính chất 5: Ma trận có các dòng/cột phụ thuộc tuyến tính (tỷ lệ) thì định thức bằng 0. Mày đang ép không gian thành một cái bánh đa đấy." },
-    { question: `Cho ma trận $A$ có $\\det(A) = 7$. Định thức của ma trận chuyển vị $A^T$ là bao nhiêu?`, options: ["7", "-7", "1/7", "49"], answer: 0, explanation: "Tính chất 7: $\\det(A^T) = \\det(A)$. Tao đã bảo dòng và cột là như nhau mà." },
-    { question: `Mày nhân tất cả các phần tử của MỘT dòng trong ma trận $A$ với số $-3$. Biết $\\det(A)=10$, định thức mới là bao nhiêu?`, options: ["10", "-30", "30", "-10"], answer: 1, explanation: "Tính chất 2: Nhân MỘT dòng với k thì định thức nhân với k. $10 \\times (-3) = -30$. Đọc cho kỹ câu hỏi vào." },
-    { question: `(Câu hỏi cuối cho thằng giỏi) Cho $A$ là ma trận khả nghịch cấp 4x4 với $\\det(A)=2$. Vậy $\\det(3A^{-1})$ là bao nhiêu?`, options: ["3/2", "81/2", "24", "1/6"], answer: 1, explanation: `$\\det(3A^{-1}) = 3^4 \\times \\det(A^{-1}) = 81 \\times \\frac{1}{\\det(A)} = 81 \\times \\frac{1}{2} = \\frac{81}{2}$. Mày phải dùng cả tính chất 8 và 10. Làm được câu này thì mày bớt ngu đi một tí rồi đấy.` }
+    { rule: 1, question: `Cho ma trận $A$ có $\\det(A) = 10$. Nếu $B$ được tạo ra bằng cách đổi chỗ 2 cột của $A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["10", "-10", "100", "1/10"], answer: 1, explanation: "Định luật 1 (Hoán Vị): Đổi chỗ 2 cột, định thức đổi dấu." },
+    { rule: 2, question: `Mày lấy dòng 1 của ma trận $A$ trừ đi 5 lần dòng 2 của $A$. Định thức của ma trận mới thay đổi thế nào so với $\\det(A)$?`, options: ["Giảm 5 lần", "Tăng 5 lần", "Bằng 0", "Không thay đổi"], answer: 3, explanation: "Định luật 2 (Cộng Dòng): Cộng một dòng với bội số của dòng KHÁC, định thức KHÔNG ĐỔI. Dễ vãi lồn." },
+    { rule: 3, question: `Mày nhân MỘT cột của ma trận $A$ với số $1/2$. Biết $\\det(A)=20$, định thức mới là bao nhiêu?`, options: ["20", "40", "10", "5"], answer: 2, explanation: "Định luật 3 (Nhân Một Dòng): Nhân MỘT cột với k thì định thức nhân với k. $20 \\times (1/2) = 10$." },
+    { rule: 4, question: `Cho ma trận $A$ cấp 4x4 có $\\det(A) = 3$. Nếu ta nhân tất cả các phần tử của $A$ với số 2 để được $B=2A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["6", "24", "48", "12"], answer: 2, explanation: "Định luật 4 (Nhân Toàn Ma Trận): $\\det(kA) = k^n \\det(A)$. Ở đây $n=4, k=2$. Vậy $\\det(2A) = 2^4 \\times 3 = 16 \\times 3 = 48$. Đừng có mà chọn 6." },
+    { rule: 6, question: `Một ma trận $A$ có cột 3 bằng đúng 2 lần cột 1. Định thức của $A$ là bao nhiêu?`, options: ["2", "1/2", "0", "Không xác định"], answer: 2, explanation: "Định luật 6 (Suy Biến): Ma trận có các cột phụ thuộc tuyến tính (tỷ lệ) thì định thức bằng 0." },
+    { rule: 7, question: `Cho $\\det(A) = -5$ và $\\det(B) = 6$. Vậy $\\det(A \\cdot B)$ bằng bao nhiêu?`, options: ["1", "-30", "30", "11"], answer: 1, explanation: "Định luật 7 (Tích): $\\det(AB) = \\det(A) \\times \\det(B)$. Lấy $(-5) \\times 6 = -30$." },
+    { rule: 8, question: `Nếu $\\det(A) = -2$, thì $\\det(A^3)$ bằng bao nhiêu?`, options: ["-8", "-6", "8", "1/8"], answer: 0, explanation: "Định luật 8 (Lũy Thừa): $\\det(A^m) = (\\det(A))^m$. Lấy $(-2)^3 = -8$." },
+    { rule: 9, question: `Cho ma trận $A$ khả nghịch với $\\det(A)=5$. Định thức của $A^{-1}$ là bao nhiêu?`, options: ["5", "-5", "1/5", "0"], answer: 2, explanation: "Định luật 9 (Nghịch Đảo): $\\det(A^{-1}) = 1/\\det(A)$. Quá đơn giản." },
+    { rule: 10, question: `Một ma trận vuông $A$ có thể có nghịch đảo hay không nếu $\\det(A) = 0$?`, options: ["Chắc chắn có", "Chắc chắn không", "Có thể có", "Chỉ khi A là ma trận 0"], answer: 1, explanation: "Định luật 10 (Điều Kiện Sinh Tồn): Ma trận khả nghịch KHI VÀ CHỈ KHI định thức khác 0." },
+    { rule: 11, question: `Biết $\\det(A) = 42$. Định thức của ma trận chuyển vị $A^T$ là bao nhiêu?`, options: ["42", "-42", "1/42", "Không đổi"], answer: 0, explanation: "Định luật 11 (Chuyển Vị): $\\det(A^T) = \\det(A)$. Dòng và cột có vai trò như nhau." },
+    { rule: 12, question: `Một ma trận tam giác dưới có các phần tử trên đường chéo chính là $10, -1, 4$. Định thức của nó là bao nhiêu?`, options: ["13", "40", "-40", "0"], answer: 2, explanation: "Định luật 12 (Sự Lười Biếng): Định thức của ma trận tam giác bằng TÍCH các phần tử trên đường chéo: $10 \\times (-1) \\times 4 = -40$." },
+    { rule: 13, question: `Định thức của ma trận đơn vị $I$ cấp 1000x1000 là bao nhiêu?`, options: ["1000", "0", "1", "Không xác định"], answer: 2, explanation: "Định luật 13 (Sự Không Đổi): $\\det(I) = 1$, bất kể cấp của nó là bao nhiêu. Nó là phép biến đổi 'không làm gì cả'." },
+    { rule: 14, question: `Cho ma trận khối $M = \\begin{pmatrix} A & B \\ 0 & C \\end{pmatrix}$, với $A, C$ là ma trận vuông. Biết $\\det(A)=4$ và $\\det(C)=5$. Vậy $\\det(M)$ là?`, options: ["9", "20", "0", "Không tính được"], answer: 1, explanation: "Định luật 14 (Chia Để Trị): $\\det(M) = \\det(A) \\times \\det(C) = 4 \\times 5 = 20$. Quá dễ." },
+    { rule: 15, question: `Nếu $Q$ là một ma trận trực giao (chỉ biểu diễn phép xoay và phản xạ), thì $\\det(Q)$ có thể nhận giá trị nào sau đây?`, options: ["2", "0.5", "-1", "5"], answer: 2, explanation: "Định luật 15 (Bảo Toàn): Ma trận trực giao bảo toàn thể tích, nên định thức của nó phải là 1 hoặc -1." },
+    { rule: 'Final', question: `(TRÙM CUỐI) Cho $A$ là ma trận khả nghịch cấp 3x3 với $\\det(A)=2$. Vậy $\\det((2A)^T A^{-1})$ là bao nhiêu?`, options: ["8", "12", "4", "24"], answer: 2, explanation: `$\\det((2A)^T A^{-1}) = \\det((2A)^T) \\times \\det(A^{-1}) = \\det(2A) \\times \\frac{1}{\\det(A)} = (2^3 \\det(A)) \\times \\frac{1}{\\det(A)} = 8 \\times \\det(A) \\times \\frac{1}{\\det(A)} = 8$. Mày phải dùng 4 định luật! Làm được thì mày tốt nghiệp.` }
 ];
+
+// ... (Phần code Javascript còn lại giữ nguyên y hệt phiên bản trước)
 
 const questionContainer = document.getElementById('question-container');
 const optionsContainer = document.getElementById('options-container');
@@ -183,31 +174,29 @@ const scoreEl = document.getElementById('score');
 let currentQuestionIndex = 0;
 let score = 0;
 
-// HÀM NÀY SẼ ĐƯỢC GỌI BỞI MATHJAX KHI NÓ ĐÃ SẴN SÀNG
 function startQuiz() {
     currentQuestionIndex = 0;
     score = 0;
-    nextBtn.innerHTML = "Câu tiếp theo, thằng ngu!";
+    nextBtn.innerHTML = "Xuống tầng tiếp theo!";
     showQuestion();
 }
 
 function showQuestion() {
     resetState();
     const currentQuestion = questions[currentQuestionIndex];
-    questionCounterEl.innerText = `Câu hỏi: ${currentQuestionIndex + 1}/${questions.length}`;
+    questionCounterEl.innerText = `Tầng Địa Ngục: ${currentQuestionIndex + 1}/${questions.length}`;
     scoreEl.innerText = `Điểm của mày: ${score}`;
     
     questionContainer.innerHTML = currentQuestion.question;
     
     currentQuestion.options.forEach((option, index) => {
         const button = document.createElement('button');
-        button.innerHTML = option; // Dùng innerHTML để render các ký tự đặc biệt nếu có
+        button.innerHTML = option;
         button.classList.add('option-btn');
         button.addEventListener('click', () => selectAnswer(index));
         optionsContainer.appendChild(button);
     });
     
-    // Yêu cầu MathJax render lại phần tử mới
     MathJax.typesetPromise([questionContainer, optionsContainer]);
 }
 
@@ -225,9 +214,9 @@ function selectAnswer(selectedIndex) {
 
     if (correct) {
         score++;
-        feedbackContainer.innerHTML = `<span style="color: var(--correct-color);">ĐÚNG! Tạm tha cho mày.</span><br><small>${currentQuestion.explanation}</small>`;
+        feedbackContainer.innerHTML = `<span style="color: var(--correct-color);">ĐÚNG! Mày đã sống sót.</span><br><small>${currentQuestion.explanation}</small>`;
     } else {
-        feedbackContainer.innerHTML = `<span style="color: var(--incorrect-color);">NGU! SAI RỒI.</span><br><small>${currentQuestion.explanation}</small>`;
+        feedbackContainer.innerHTML = `<span style="color: var(--incorrect-color);">SAI! Mày chết rồi.</span><br><small>${currentQuestion.explanation}</small>`;
     }
 
     Array.from(optionsContainer.children).forEach((button, index) => {
@@ -242,7 +231,7 @@ function selectAnswer(selectedIndex) {
     if (questions.length > currentQuestionIndex + 1) {
         nextBtn.style.display = 'block';
     } else {
-        nextBtn.innerText = 'Chơi lại đi, mày vẫn còn ngu lắm!';
+        nextBtn.innerText = `Mày đã phá đảo! Điểm: ${score}/${questions.length}. Chơi lại?`;
         nextBtn.style.display = 'block';
     }
 }
@@ -256,9 +245,7 @@ nextBtn.addEventListener('click', () => {
     }
 });
 
-// Không gọi startQuiz() ở đây nữa, mà để MathJax gọi
 </script>
 
 </body>
-</html>```
-
+</html>
