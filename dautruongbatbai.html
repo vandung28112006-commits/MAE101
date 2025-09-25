@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đấu Trường Định Thức - 15 Tầng Địa Ngục</title>
+    <title>Đấu Trường Định Thức - Phiên Bản Giảng Dạy</title>
     
     <script>
-        // CẤU HÌNH CHO MATHJAX ĐỂ TRÁNH XUNG ĐỘT - CÔNG NGHỆ CHỐNG NGU
+        // CẤU HÌNH CHO MATHJAX ĐỂ TRÁNH XUNG ĐỘT
         window.MathJax = {
           tex: {
             inlineMath: [['$', '$'], ['\\(', '\\)']]
@@ -14,8 +14,8 @@
           startup: {
             pageReady: () => {
               return MathJax.startup.defaultPageReady().then(() => {
-                console.log('MathJax đã sẵn sàng. Bắt đầu tra tấn!');
-                startQuiz(); // CHỈ BẮT ĐẦU KHI MATHJAX ĐÃ CHẠY XONG
+                console.log('MathJax đã sẵn sàng. Bắt đầu nhồi sọ!');
+                startQuiz();
               });
             }
           }
@@ -33,6 +33,7 @@
             --accent-color: #00ff9d;
             --correct-color: #2ecc71;
             --incorrect-color: #e74c3c;
+            --explanation-color: #f1c40f; /* Vàng để nổi bật phần giải thích */
         }
 
         body {
@@ -57,15 +58,6 @@
             width: 100%;
             max-width: 850px;
             text-align: center;
-        }
-
-        #header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 1.1em;
-            color: var(--accent-color);
         }
         
         #question-container {
@@ -100,11 +92,7 @@
              transform: translateY(-3px);
         }
         
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-        
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.6; }
         .option-btn.correct { background-color: var(--correct-color); border-color: #fff; color: #1a1a1a; }
         .option-btn.incorrect { background-color: var(--incorrect-color); border-color: #fff; color: #1a1a1a; }
 
@@ -113,7 +101,16 @@
             min-height: 50px;
             font-size: 1.1em;
             font-weight: bold;
-            line-height: 1.5;
+            text-align: left;
+            padding: 15px;
+            background-color: #222;
+            border-left: 5px solid var(--explanation-color);
+            border-radius: 5px;
+        }
+        
+        #feedback-container .rule-title {
+            color: var(--explanation-color);
+            text-transform: uppercase;
         }
 
         #next-btn {
@@ -130,7 +127,7 @@
 <body>
 
 <div class="quiz-container">
-    <h1>15 Tầng Địa Ngục Định Thức</h1>
+    <h1>Đấu Trường Định Thức - Phiên Bản Giảng Dạy</h1>
     <div id="header">
         <span id="question-counter"></span>
         <span id="score"></span>
@@ -139,31 +136,30 @@
     <div id="question-container"></div>
     <div id="options-container"></div>
     <div id="feedback-container"></div>
-    <button id="next-btn" class="option-btn">Xuống tầng tiếp theo!</button>
+    <button id="next-btn" class="option-btn">Tiếp Tục!</button>
 </div>
 
 <script>
-// BỘ NÃO SIÊU VIỆT VỚI 15 CÂU HỎI
+// BỘ NÃO CUỐI CÙNG VỚI GIẢI THÍCH TẬN RĂNG
 const questions = [
-    { rule: 1, question: `Cho ma trận $A$ có $\\det(A) = 10$. Nếu $B$ được tạo ra bằng cách đổi chỗ 2 cột của $A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["10", "-10", "100", "1/10"], answer: 1, explanation: "Định luật 1 (Hoán Vị): Đổi chỗ 2 cột, định thức đổi dấu." },
-    { rule: 2, question: `Mày lấy dòng 1 của ma trận $A$ trừ đi 5 lần dòng 2 của $A$. Định thức của ma trận mới thay đổi thế nào so với $\\det(A)$?`, options: ["Giảm 5 lần", "Tăng 5 lần", "Bằng 0", "Không thay đổi"], answer: 3, explanation: "Định luật 2 (Cộng Dòng): Cộng một dòng với bội số của dòng KHÁC, định thức KHÔNG ĐỔI. Dễ vãi lồn." },
-    { rule: 3, question: `Mày nhân MỘT cột của ma trận $A$ với số $1/2$. Biết $\\det(A)=20$, định thức mới là bao nhiêu?`, options: ["20", "40", "10", "5"], answer: 2, explanation: "Định luật 3 (Nhân Một Dòng): Nhân MỘT cột với k thì định thức nhân với k. $20 \\times (1/2) = 10$." },
-    { rule: 4, question: `Cho ma trận $A$ cấp 4x4 có $\\det(A) = 3$. Nếu ta nhân tất cả các phần tử của $A$ với số 2 để được $B=2A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["6", "24", "48", "12"], answer: 2, explanation: "Định luật 4 (Nhân Toàn Ma Trận): $\\det(kA) = k^n \\det(A)$. Ở đây $n=4, k=2$. Vậy $\\det(2A) = 2^4 \\times 3 = 16 \\times 3 = 48$. Đừng có mà chọn 6." },
-    { rule: 6, question: `Một ma trận $A$ có cột 3 bằng đúng 2 lần cột 1. Định thức của $A$ là bao nhiêu?`, options: ["2", "1/2", "0", "Không xác định"], answer: 2, explanation: "Định luật 6 (Suy Biến): Ma trận có các cột phụ thuộc tuyến tính (tỷ lệ) thì định thức bằng 0." },
-    { rule: 7, question: `Cho $\\det(A) = -5$ và $\\det(B) = 6$. Vậy $\\det(A \\cdot B)$ bằng bao nhiêu?`, options: ["1", "-30", "30", "11"], answer: 1, explanation: "Định luật 7 (Tích): $\\det(AB) = \\det(A) \\times \\det(B)$. Lấy $(-5) \\times 6 = -30$." },
-    { rule: 8, question: `Nếu $\\det(A) = -2$, thì $\\det(A^3)$ bằng bao nhiêu?`, options: ["-8", "-6", "8", "1/8"], answer: 0, explanation: "Định luật 8 (Lũy Thừa): $\\det(A^m) = (\\det(A))^m$. Lấy $(-2)^3 = -8$." },
-    { rule: 9, question: `Cho ma trận $A$ khả nghịch với $\\det(A)=5$. Định thức của $A^{-1}$ là bao nhiêu?`, options: ["5", "-5", "1/5", "0"], answer: 2, explanation: "Định luật 9 (Nghịch Đảo): $\\det(A^{-1}) = 1/\\det(A)$. Quá đơn giản." },
-    { rule: 10, question: `Một ma trận vuông $A$ có thể có nghịch đảo hay không nếu $\\det(A) = 0$?`, options: ["Chắc chắn có", "Chắc chắn không", "Có thể có", "Chỉ khi A là ma trận 0"], answer: 1, explanation: "Định luật 10 (Điều Kiện Sinh Tồn): Ma trận khả nghịch KHI VÀ CHỈ KHI định thức khác 0." },
-    { rule: 11, question: `Biết $\\det(A) = 42$. Định thức của ma trận chuyển vị $A^T$ là bao nhiêu?`, options: ["42", "-42", "1/42", "Không đổi"], answer: 0, explanation: "Định luật 11 (Chuyển Vị): $\\det(A^T) = \\det(A)$. Dòng và cột có vai trò như nhau." },
-    { rule: 12, question: `Một ma trận tam giác dưới có các phần tử trên đường chéo chính là $10, -1, 4$. Định thức của nó là bao nhiêu?`, options: ["13", "40", "-40", "0"], answer: 2, explanation: "Định luật 12 (Sự Lười Biếng): Định thức của ma trận tam giác bằng TÍCH các phần tử trên đường chéo: $10 \\times (-1) \\times 4 = -40$." },
-    { rule: 13, question: `Định thức của ma trận đơn vị $I$ cấp 1000x1000 là bao nhiêu?`, options: ["1000", "0", "1", "Không xác định"], answer: 2, explanation: "Định luật 13 (Sự Không Đổi): $\\det(I) = 1$, bất kể cấp của nó là bao nhiêu. Nó là phép biến đổi 'không làm gì cả'." },
-    { rule: 14, question: `Cho ma trận khối $M = \\begin{pmatrix} A & B \\ 0 & C \\end{pmatrix}$, với $A, C$ là ma trận vuông. Biết $\\det(A)=4$ và $\\det(C)=5$. Vậy $\\det(M)$ là?`, options: ["9", "20", "0", "Không tính được"], answer: 1, explanation: "Định luật 14 (Chia Để Trị): $\\det(M) = \\det(A) \\times \\det(C) = 4 \\times 5 = 20$. Quá dễ." },
-    { rule: 15, question: `Nếu $Q$ là một ma trận trực giao (chỉ biểu diễn phép xoay và phản xạ), thì $\\det(Q)$ có thể nhận giá trị nào sau đây?`, options: ["2", "0.5", "-1", "5"], answer: 2, explanation: "Định luật 15 (Bảo Toàn): Ma trận trực giao bảo toàn thể tích, nên định thức của nó phải là 1 hoặc -1." },
-    { rule: 'Final', question: `(TRÙM CUỐI) Cho $A$ là ma trận khả nghịch cấp 3x3 với $\\det(A)=2$. Vậy $\\det((2A)^T A^{-1})$ là bao nhiêu?`, options: ["8", "12", "4", "24"], answer: 2, explanation: `$\\det((2A)^T A^{-1}) = \\det((2A)^T) \\times \\det(A^{-1}) = \\det(2A) \\times \\frac{1}{\\det(A)} = (2^3 \\det(A)) \\times \\frac{1}{\\det(A)} = 8 \\times \\det(A) \\times \\frac{1}{\\det(A)} = 8$. Mày phải dùng 4 định luật! Làm được thì mày tốt nghiệp.` }
+    { question: `Cho ma trận $A$ có $\\det(A) = 10$. Nếu $B$ được tạo ra bằng cách đổi chỗ 2 cột của $A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["10", "-10", "100", "1/10"], answer: 1, explanation: "<div class='rule-title'>Định luật 1 (Hoán Vị):</div>Đổi chỗ hai dòng (hoặc hai cột) bất kỳ của một ma trận, định thức của nó sẽ đổi dấu. Mày đang 'lật mặt' không gian, nên kết quả là $-10$." },
+    { question: `Mày lấy dòng 1 của ma trận $A$ trừ đi 5 lần dòng 2 của $A$. Định thức của ma trận mới thay đổi thế nào so với $\\det(A)$?`, options: ["Giảm 5 lần", "Tăng 5 lần", "Bằng 0", "Không thay đổi"], answer: 3, explanation: "<div class='rule-title'>Định luật 2 (Cộng Dòng):</div>Cộng một dòng với bội số của một dòng KHÁC, định thức **KHÔNG THAY ĐỔI**. Thao tác này chỉ làm 'trượt' không gian chứ không thay đổi thể tích của nó. Đây là vũ khí chính để khử Gauss." },
+    { question: `Mày nhân MỘT cột của ma trận $A$ với số $1/2$. Biết $\\det(A)=20$, định thức mới là bao nhiêu?`, options: ["20", "40", "10", "5"], answer: 2, explanation: "<div class='rule-title'>Định luật 3 (Nhân Một Dòng):</div>Nhân MỘT dòng/cột với hằng số $k$, định thức cũng được nhân với $k$. Mày chỉ kéo dãn không gian theo MỘT chiều. Do đó: $20 \\times (1/2) = 10$." },
+    { question: `Cho ma trận $A$ cấp 4x4 có $\\det(A) = 3$. Nếu ta nhân tất cả các phần tử của $A$ với số 2 để được $B=2A$, thì $\\det(B)$ bằng bao nhiêu?`, options: ["6", "24", "48", "12"], answer: 2, explanation: "<div class='rule-title'>Định luật 4 (Nhân Toàn Ma Trận):</div>Công thức là $\\det(kA) = k^n \\det(A)$. Mày đang kéo dãn **TẤT CẢ** $n=4$ chiều, mỗi chiều $k=2$ lần. Vậy kết quả là $2^4 \\times 3 = 16 \\times 3 = 48$. Đừng có mà nhầm với Định luật 3." },
+    { question: `Một ma trận $A$ có cột 3 bằng đúng 2 lần cột 1. Định thức của $A$ là bao nhiêu?`, options: ["2", "1/2", "0", "Không xác định"], answer: 2, explanation: "<div class='rule-title'>Định luật 6 (Suy Biến):</div>Khi các dòng/cột phụ thuộc tuyến tính (tỷ lệ), phép biến đổi sẽ làm 'bẹp dí' không gian. Một hình đã bị ép bẹp thì thể tích bằng mấy? Bằng 0, thằng ngu ạ." },
+    { question: `Cho $\\det(A) = -5$ và $\\det(B) = 6$. Vậy $\\det(A \\cdot B)$ bằng bao nhiêu?`, options: ["1", "-30", "30", "11"], answer: 1, explanation: "<div class='rule-title'>Định luật 7 (Tích):</div>Đây là định luật tối thượng: $\\det(AB) = \\det(A) \\times \\det(B)$. Hệ số thay đổi thể tích của một chuỗi biến đổi bằng TÍCH các hệ số thành phần. Chỉ việc nhân vào: $(-5) \\times 6 = -30$." },
+    { question: `Nếu $\\det(A) = -2$, thì $\\det(A^3)$ bằng bao nhiêu?`, options: ["-8", "-6", "8", "1/8"], answer: 0, explanation: "<div class='rule-title'>Định luật 8 (Lũy Thừa):</div>Là hệ quả trực tiếp của Định luật Tích, $\\det(A^m) = (\\det(A))^m$. Biến đổi $3$ lần liên tiếp thì hệ số thay đổi thể tích là $(\\det(A))^3 = (-2)^3 = -8$." },
+    { question: `Cho ma trận $A$ khả nghịch với $\\det(A)=5$. Định thức của $A^{-1}$ là bao nhiêu?`, options: ["5", "-5", "1/5", "0"], answer: 2, explanation: "<div class='rule-title'>Định luật 9 (Nghịch Đảo):</div>Nếu $A$ làm thể tích phình to $k$ lần, thì $A^{-1}$ phải làm nó co lại đúng $k$ lần để về như cũ. Do đó $\\det(A^{-1}) = 1/\\det(A) = 1/5$." },
+    { question: `Một ma trận vuông $A$ có thể có nghịch đảo hay không nếu $\\det(A) = 0$?`, options: ["Chắc chắn có", "Chắc chắn không", "Có thể có", "Chỉ khi A là ma trận 0"], answer: 1, explanation: "<div class='rule-title'>Định luật 10 (Điều Kiện Sinh Tồn):</div>Đây là bài kiểm tra cuối cùng. $\\det(A)=0$ nghĩa là phép biến đổi đã làm 'bẹp' không gian, không thể nào 'giải nén' nó về như cũ được. Do đó, $A^{-1}$ **KHÔNG TỒN TẠI**." },
+    { question: `Biết $\\det(A) = 42$. Định thức của ma trận chuyển vị $A^T$ là bao nhiêu?`, options: ["42", "-42", "1/42", "Không đổi"], answer: 0, explanation: "<div class='rule-title'>Định luật 11 (Chuyển Vị):</div>$\det(A^T) = \\det(A)$. Vai trò của dòng và cột trong việc xác định 'thể tích' là hoàn toàn như nhau. Đừng có nghĩ nhiều." },
+    { question: `Một ma trận tam giác dưới có các phần tử trên đường chéo chính là $10, -1, 4$. Định thức của nó là bao nhiêu?`, options: ["13", "40", "-40", "0"], answer: 2, explanation: "<div class='rule-title'>Định luật 12 (Sự Lười Biếng):</div>Với ma trận tam giác (trên hoặc dưới), định thức chính là TÍCH của các phần tử trên đường chéo chính: $10 \\times (-1) \\times 4 = -40$." },
+    { question: `Định thức của ma trận đơn vị $I$ cấp 1000x1000 là bao nhiêu?`, options: ["1000", "0", "1", "Không xác định"], answer: 2, explanation: "<div class='rule-title'>Định luật 13 (Sự Không Đổi):</div>Ma trận đơn vị $I$ là phép biến đổi 'không làm gì cả'. Đương nhiên nó không làm thay đổi thể tích, nên $\\det(I)$ luôn bằng 1, bất kể cấp của nó." },
+    { question: `Cho ma trận khối $M = \\begin{pmatrix} A & B \\\\ 0 & C \\end{pmatrix}$, với $A, C$ là ma trận vuông. Biết $\\det(A)=4$ và $\\det(C)=5$. Vậy $\\det(M)$ là?`, options: ["9", "20", "0", "Không tính được"], answer: 1, explanation: "<div class='rule-title'>Định luật 14 (Chia Để Trị):</div>Với ma trận khối dạng tam giác, mày chỉ cần nhân định thức của các khối trên đường chéo lại với nhau. $\\det(M) = \\det(A) \\cdot \\det(C) = 4 \\times 5 = 20$." },
+    { question: `Nếu $Q$ là một ma trận trực giao (chỉ biểu diễn phép xoay và phản xạ), thì $\\det(Q)$ có thể nhận giá trị nào sau đây?`, options: ["2", "0.5", "-1", "5"], answer: 2, explanation: "<div class='rule-title'>Định luật 15 (Bảo Toàn):</div>Ma trận trực giao chỉ XOAY hoặc PHẢN XẠ không gian, nó không làm co giãn. Nó bảo toàn thể tích một cách hoàn hảo, nên định thức của nó **CHỈ CÓ THỂ LÀ 1 HOẶC -1**." },
+    { question: `(TRÙM CUỐI) Cho $A$ là ma trận khả nghịch cấp 3x3 với $\\det(A)=2$. Vậy $\\det((2A)^T A^{-1})$ là bao nhiêu?`, options: ["8", "12", "4", "24"], answer: 2, explanation: "<div class='rule-title'>TỔNG HỢP 4 ĐỊNH LUẬT:</div>1. Tích: $\\det(XY) = \\det(X)\\det(Y)$.<br>2. Chuyển vị: $\\det(X^T) = \\det(X)$.<br>3. Nhân toàn cục: $\\det(kX) = k^n\\det(X)$.<br>4. Nghịch đảo: $\\det(X^{-1}) = 1/\\det(X)$.<br>Áp dụng: $\\det((2A)^T A^{-1}) = \\det((2A)^T) \\det(A^{-1}) = \\det(2A) \\det(A^{-1}) = (2^3 \\det(A)) (1/\\det(A)) = 8$." }
 ];
 
-// ... (Phần code Javascript còn lại giữ nguyên y hệt phiên bản trước)
-
+// ... (Phần code Javascript còn lại giữ nguyên y hệt, không cần thay đổi)
 const questionContainer = document.getElementById('question-container');
 const optionsContainer = document.getElementById('options-container');
 const feedbackContainer = document.getElementById('feedback-container');
@@ -177,14 +173,14 @@ let score = 0;
 function startQuiz() {
     currentQuestionIndex = 0;
     score = 0;
-    nextBtn.innerHTML = "Xuống tầng tiếp theo!";
+    nextBtn.innerHTML = "Tiếp Tục!";
     showQuestion();
 }
 
 function showQuestion() {
     resetState();
     const currentQuestion = questions[currentQuestionIndex];
-    questionCounterEl.innerText = `Tầng Địa Ngục: ${currentQuestionIndex + 1}/${questions.length}`;
+    questionCounterEl.innerText = `Câu hỏi: ${currentQuestionIndex + 1}/${questions.length}`;
     scoreEl.innerText = `Điểm của mày: ${score}`;
     
     questionContainer.innerHTML = currentQuestion.question;
@@ -212,12 +208,15 @@ function selectAnswer(selectedIndex) {
     const currentQuestion = questions[currentQuestionIndex];
     const correct = selectedIndex === currentQuestion.answer;
 
+    let feedbackHTML = '';
     if (correct) {
         score++;
-        feedbackContainer.innerHTML = `<span style="color: var(--correct-color);">ĐÚNG! Mày đã sống sót.</span><br><small>${currentQuestion.explanation}</small>`;
+        feedbackHTML += `<span style="color: var(--correct-color);">ĐÚNG! Mày đã sống sót.</span><br>`;
     } else {
-        feedbackContainer.innerHTML = `<span style="color: var(--incorrect-color);">SAI! Mày chết rồi.</span><br><small>${currentQuestion.explanation}</small>`;
+        feedbackHTML += `<span style="color: var(--incorrect-color);">SAI! Mày chết rồi.</span><br>`;
     }
+    feedbackHTML += `<small>${currentQuestion.explanation}</small>`;
+    feedbackContainer.innerHTML = feedbackHTML;
 
     Array.from(optionsContainer.children).forEach((button, index) => {
         if (index === currentQuestion.answer) {
